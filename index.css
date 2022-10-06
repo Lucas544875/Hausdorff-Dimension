@@ -1,0 +1,98 @@
+body{
+  text-align: center;
+	display: flex;
+  background-color: #222222;
+	height: 100vh;
+	margin: 0%;
+}
+
+h1{
+  color :aliceblue;
+}
+h2{
+  color :aliceblue;
+}
+p{
+  color :aliceblue;
+}
+
+.leftWrapper{
+	box-sizing: border-box;
+	padding: 8px;
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightWrapper{
+	box-sizing: border-box;
+	padding: 8px;
+  width: 60%;
+  height: 100;
+	overflow-y: scroll;
+	-ms-overflow-style: none;    /* IE, Edge 対応 */
+	scrollbar-width: none;       /* Firefox 対応 */
+}
+
+.rightWrapper::-webkit-scrollbar {
+	display:none;
+}
+
+.work{
+  background-color: aliceblue;
+  display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	width: 400px;
+	height: 400px;
+	color: #333;
+	font-size: 25px;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+	margin: 10pt auto;
+
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	
+	background-size: cover;
+	z-index: 0;
+  text-align: center;
+	margin-top: 30px;
+}
+.work::before{
+	transition: 0.1s;
+	content: "";
+  display: block;
+  position: absolute;
+  background: inherit;
+	filter:grayscale(90%) blur(5px);
+  top: -5px;
+  right: -5px;
+  bottom: -5px;
+  left: -5px;
+  z-index: -1;
+}
+
+#meltDown{
+	background-image: url(imgs/meltdown.png);
+}
+#tofu{
+	background-image: url(imgs/tofu.png);
+}
+#babbel{
+	background-image: url(imgs/babbel.png);
+}
+
+.work:hover:before{
+	filter: none;
+}
+
+.discription{
+  color :aliceblue;
+	background-color: rgba(0, 0, 0, 0.0);
+	font-family: 'Klee One', cursive;
+}

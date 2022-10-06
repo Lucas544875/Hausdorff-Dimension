@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <link href="style.css" rel="stylesheet">
+  <link href="index.css" rel="stylesheet">
   <meta charset="utf-8" />
   <title>Hausdorff Dimension</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>
-    Hausdorff Dimension
-  </h1>
-  <h2>注意</h2>
-  <p>激重です。スマホやよわよわPCでは満足に見れません！</p>
-  <p><button class = "link" onclick = "location.href='./mandelbox.html'">炉心融解</button></p>
-  <p><button class = "link" onclick = "location.href='./mandelbox2.html'">習作 木綿豆腐</button></p>
-  <p><button class = "link" onclick = "location.href='./pseudoKleinian.html'">バベルの塔</button></p>
+  <div class="leftWrapper">
+    <div class="title">
+      <h1>
+        Hausdorff Dimension
+      </h1>
+      <h2>注意</h2>
+      <p>激重です。スマホやよわよわPCでは満足に見られません！</p>
+    </div>
+  </div>
+  <div class="rightWrapper">
+    <div class = "work" id = "meltDown" onclick = "location.href='./mandelbox.html'">
+      <div class ="discription">
+        炉心融解
+      </div> 
+    </div>
+    <div class = "work" id = "tofu" onclick = "location.href='./mandelbox2.html'">
+      <div class ="discription">
+        習作 木綿豆腐
+      </div>
+    </div>
+    <div class = "work" id = "babbel" onclick = "location.href='./pseudoKleinian.html'"> 
+      <div class ="discription">
+        バベルの塔
+      </div>
+    </div>
+  </div>
 </body>
 </html>
