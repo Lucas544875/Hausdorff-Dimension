@@ -49,18 +49,15 @@ p{
 	width: 400px;
 	height: 400px;
 	color: #333;
-	font-size: 25px;
-	font-weight: 700;
+	font-size: 40px;
 	text-decoration: none;
 	cursor: pointer;
 	margin: 10pt auto;
 
-	background-size: 100% auto;
+	background-size: cover;
 	background-repeat: no-repeat;
 	
-	background-size: cover;
 	z-index: 0;
-  text-align: center;
 	margin-top: 30px;
 }
 .work::before{
