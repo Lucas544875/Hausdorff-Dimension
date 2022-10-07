@@ -89,4 +89,9 @@ p{
   color :aliceblue;
 	background-color: rgba(0, 0, 0, 0.0);
 	font-family: 'Klee One', cursive;
+	text-shadow:0 0 8px black,0 0 8px black;
+}
+
+.work:hover .discription{
+	display: none;
 }
