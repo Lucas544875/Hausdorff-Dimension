@@ -80,6 +80,9 @@ p{
 #babbel{
 	background-image: url(imgs/babbel.png);
 }
+#metaball{
+	background-image: url(imgs/metaball.png);
+}
 
 .work:hover:before{
 	filter: none;

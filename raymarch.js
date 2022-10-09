@@ -4,7 +4,7 @@ let mouseflag=false;
 let centorx;
 let centory;
 let startTime;
-let tempTime;
+let tempTime =0;
 let timenow = new Date().getTime();
 let uniLocation = [];
 let vAttLocation = [];
