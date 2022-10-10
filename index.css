@@ -83,6 +83,9 @@ p{
 #metaball{
 	background-image: url(imgs/metaball.png);
 }
+#overwrite{
+	background-image: url(imgs/overwrite.png);
+}
 
 .work:hover:before{
 	filter: none;
