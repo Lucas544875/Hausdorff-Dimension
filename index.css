@@ -86,6 +86,9 @@ p{
 #overwrite{
 	background-image: url(imgs/overwrite.png);
 }
+#impossible{
+	background-image: url(imgs/impossible.png);
+}
 
 .work:hover:before{
 	filter: none;
