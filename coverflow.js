@@ -81,15 +81,22 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Enter") navigate(works[current].href);
 });
 
+//ホイール/トラックパッドは細かいdeltaが連続で届くので、
+//一定量たまるまで動かさず、移動後はしばらく入力を無視して感度を抑える
 let wheelLock = 0;
+let wheelAcc = 0;
+let wheelLast = 0;
 coverflow.addEventListener("wheel", (e) => {
   e.preventDefault();
   const now = Date.now();
-  if (now - wheelLock < 250) return;
-  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-  if (Math.abs(delta) < 10) return;
+  if (now - wheelLock < 500) return;
+  if (now - wheelLast > 300) wheelAcc = 0;
+  wheelLast = now;
+  wheelAcc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  if (Math.abs(wheelAcc) < 120) return;
   wheelLock = now;
-  move(delta > 0 ? 1 : -1);
+  move(wheelAcc > 0 ? 1 : -1);
+  wheelAcc = 0;
 }, { passive: false });
 
 let touchX = null;
