@@ -3,50 +3,20 @@
 <head>
   <link href="index.css" rel="stylesheet">
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hausdorff Dimension</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="leftWrapper">
-    <div class="title">
-      <h1>
-        Hausdorff Dimension
-      </h1>
-    </div>
-  </div>
-  <div class="rightWrapper">
-    <div class = "work" id = "meltDown" onclick = "location.href='./mandelbox.html'">
-      <div class ="discription">
-        炉心融解
-      </div> 
-    </div>
-    <div class = "work" id = "tofu" onclick = "location.href='./mandelbox2.html'">
-      <div class ="discription">
-        習作 木綿豆腐
-      </div>
-    </div>
-    <div class = "work" id = "babbel" onclick = "location.href='./pseudoKleinian.html'"> 
-      <div class ="discription">
-        バベルの塔
-      </div>
-    </div>
-    <div class = "work" id = "metaball" onclick = "location.href='./metaball.html'"> 
-      <div class ="discription">
-        種
-      </div>
-    </div>
-    <div class = "work" id = "overwrite" onclick = "location.href='./overwrite.html'"> 
-      <div class ="discription">
-        Overwrite
-      </div>
-    </div>
-    <div class = "work" id = "impossible" onclick = "location.href='./trick.html'"> 
-      <div class ="discription">
-        Impossible
-      </div>
-    </div>
-  </div>
+  <header class="siteTitle">
+    <h1>
+      Hausdorff Dimension
+    </h1>
+  </header>
+  <main class="coverflow" id="coverflow"></main>
+  <p class="hint">← → / スワイプで選択、クリックで開く</p>
+  <script src="coverflow.js"></script>
 </body>
 </html>

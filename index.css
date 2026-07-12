@@ -1,106 +1,70 @@
 body{
-  text-align: center;
-	display: flex;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #222222;
-	height: 100vh;
-	margin: 0%;
+  overflow: hidden;
 }
 
 h1{
-  color :aliceblue;
-}
-h2{
-  color :aliceblue;
-}
-p{
-  color :aliceblue;
+  color: aliceblue;
+  margin: 0;
 }
 
-.leftWrapper{
-	box-sizing: border-box;
-	padding: 8px;
-  width: 40%;
-  height: 100%;
+.siteTitle{
+  padding: 24px 8px 0;
+  text-align: center;
+}
+
+.coverflow{
+  flex: 1;
+  position: relative;
+  perspective: 1200px;
+}
+
+.card{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(400px, 55vmin);
+  height: min(400px, 55vmin);
   display: flex;
   justify-content: center;
   align-items: center;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  filter: grayscale(85%) brightness(0.55);
+  transition: transform 0.45s ease, filter 0.45s ease;
+  -webkit-box-reflect: below 14px linear-gradient(transparent 55%, rgba(255, 255, 255, 0.2));
 }
 
-.rightWrapper{
-	box-sizing: border-box;
-	padding: 8px;
-  width: 60%;
-  height: 100;
-	overflow-y: scroll;
-	-ms-overflow-style: none;    /* IE, Edge 対応 */
-	scrollbar-width: none;       /* Firefox 対応 */
+.card.center{
+  filter: none;
 }
 
-.rightWrapper::-webkit-scrollbar {
-	display:none;
+.caption{
+  color: aliceblue;
+  font-family: 'Klee One', cursive;
+  font-size: 40px;
+  text-shadow: 0 0 8px black, 0 0 8px black;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.work{
-  background-color: aliceblue;
-  display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	width: 400px;
-	height: 400px;
-	font-size: 40px;
-	cursor: pointer;
-	margin: 30pt auto;
-	background-size: cover;
-	z-index: 0;
-	overflow: clip;
-}
-.work::before{
-	box-sizing: content-box;
-
-	transition: 0.1s;
-	content: "";
-  display: block;
-  position: absolute;
-  background: inherit;
-	filter:grayscale(90%) blur(5px);
-  top:    -3px;
-  right:  -3px;
-  bottom: -3px;
-  left:   -3px;
-  z-index: -1;
+.card.center .caption{
+  opacity: 1;
 }
 
-#meltDown{
-	background-image: url(imgs/meltdown.png);
-}
-#tofu{
-	background-image: url(imgs/tofu.png);
-}
-#babbel{
-	background-image: url(imgs/babbel.png);
-}
-#metaball{
-	background-image: url(imgs/metaball.png);
-}
-#overwrite{
-	background-image: url(imgs/overwrite.png);
-}
-#impossible{
-	background-image: url(imgs/impossible.png);
+.card.center:hover .caption{
+  opacity: 0;
 }
 
-.work:hover:before{
-	filter: none;
-}
-
-.discription{
-  color :aliceblue;
-	background-color: rgba(0, 0, 0, 0.0);
-	font-family: 'Klee One', cursive;
-	text-shadow:0 0 8px black,0 0 8px black;
-}
-
-.work:hover .discription{
-	display: none;
+.hint{
+  color: rgba(240, 248, 255, 0.45);
+  font-family: 'Klee One', cursive;
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 18px;
 }
