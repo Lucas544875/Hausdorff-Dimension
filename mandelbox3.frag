@@ -36,25 +36,34 @@ struct effectConfig{
   bool grow;       //グロー
   bool fog;        //霧
   bool gamma;      //ガンマ補正
+  bool ao;         //AO(レイマーチ反復回数ベース)
+  bool rim;        //フレネルリムライト
 };
 
 const effectConfig effect = effectConfig(
   false, //反射
   true,  //アンビエント
-  false, //ハイライト(鏡面反射)
+  false, //ハイライト(鏡面反射) フラクタルは法線が画素ごとに暴れてちらつくため使わない
   true, //拡散光
   true,  //白熱光
-  false,  //ソフトシャドウ
+  true,  //ソフトシャドウ
   false, //大域照明
   true, //グロー
-  false,  //霧
-  true   //ガンマ補正
+  true,  //霧
+  true,  //ガンマ補正
+  true,  //AO
+  true   //フレネルリムライト
 );
 
 struct dfstruct{
   float dist;
   int   id;
 };
+
+//オービットトラップ
+//距離関数の反復中に軌道が原点へ最接近した距離を記録し、着色に使う
+float g_trap = INFINITY;    //直近のmandelBox呼び出しのトラップ値
+float g_hitTrap = INFINITY; //レイがヒットした地点のトラップ値(法線計算で上書きされる前に保存)
 
 
 //quaternion
@@ -123,13 +132,16 @@ float mandelBox(vec3 z){
   float Scale = -2.18 ;//定数1.9
 	vec3 offset = z;
 	float dr = 1.0;
+	float trap = INFINITY;
 	//反復は12回で打ち切る 16回と見た目はほぼ変わらず距離関数が3/4のコストになる
 	for (int n = 0; n < 12; n++) {
 		boxFold(z,dr);       // Reflect
 		sphereFold(z,dr);    // Sphere Inversion
     z=Scale*z + offset;  // Scale & Translate
     dr = dr*abs(Scale)+1.0;
+    trap = min(trap, length(z));
 	}
+	g_trap = trap;
 	float r = length(z);
 	return r/abs(dr);
 }
@@ -163,6 +175,7 @@ const int GRID = 3;
 const int MANDEL = 4;
 const int BROWN = 5;
 const int NORMAL = 6;
+const int ICE = 7;
 const int LESSSTEP = 97;
 const int DEBUG = 98;
 const int ERROR = 99;
@@ -170,7 +183,7 @@ const int ERROR = 99;
 //マテリアルの設定
 int materialOf(int objectID){
   if (objectID == 0){
-    return BROWN;
+    return ICE;
   }else if (objectID == 98){
     return SAIHATE;
   }else if (objectID == 99){
@@ -209,6 +222,14 @@ vec3 normalCol(vec3 rPos){
   return abs(normal(rPos));
 }
 
+vec3 iceCol(vec3 rPos){
+  //オービットトラップ着色 軌道が原点近くを通った場所ほど明るい氷色になる
+  float t = exp(-0.55*g_hitTrap);
+  vec3 deep = vec3(0.101, 0.207, 0.407);//深い氷
+  vec3 pale = vec3(0.784, 0.921, 1.000);//氷の表面
+  return mix(deep, pale, clamp(t,0.0,1.0));
+}
+
 vec3 color(rayobj ray){
   if (ray.material == GRID){
     return gridCol(ray.rPos);
@@ -222,6 +243,8 @@ vec3 color(rayobj ray){
     return vec3(0.0);
   }else if (ray.material == BROWN){
     return vec3(0.454, 0.301, 0.211);
+  }else if (ray.material == ICE){
+    return iceCol(ray.rPos);
   }else if (ray.material == NORMAL){
     return normalCol(ray.rPos);
   }else if (ray.material == SAIHATE){
@@ -243,6 +266,8 @@ float refrectance(int material){
     return 0.3;
   }else if (material == MANDEL){
     return 0.3;
+  }else if (material == ICE){
+    return 0.2;
   }else if (material == NORMAL){
     return 0.4;
   }else{
@@ -260,6 +285,7 @@ void raymarch(inout rayobj ray){
     float eps = max(0.001, 0.0002*ray.len);
     if(ray.distance < eps){
       ray.distance = 0.0;//ヒットの印 以降の分岐は固定閾値のままでよい
+      g_hitTrap = g_trap;//法線計算がg_trapを上書きする前に保存
       ray.normal = normal(ray.rPos);
       ray.objectID = df.id;
       ray.iterate = float(i)/float(Iteration);
@@ -327,23 +353,34 @@ void incandescenceFunc(inout rayobj ray){ //白熱光
   _incandescenceFunc(ray, incandescenceColor, incCenter5, incRadius, incIntensity);
 }
 
-const float shadowCoef = 0.4;
-void shadowFunc(inout rayobj ray){
+const float shadowCoef = 0.55;
+void shadowFunc(inout rayobj ray){//ソフトシャドウ
   if (dot(ray.normal, LightDir)<0.0){return;}
-  float h = 0.0;
-  float c = 0.0;
+  //ヒット位置は適応イプシロン分だけ表面から浮いているので、自己遮蔽を避けて少し先から開始する
+  float c = 0.02;
   float r = 1.0;
-  for(float t = 0.0; t < 50.0; t++){
-    h = distanceFunction(ray.rPos + ray.normal*0.001 + LightDir * c).dist;
-    if(h < 0.001){
-      ray.fragColor *= shadowCoef;
-      return;
+  for(int t = 0; t < 40; t++){
+    float h = distanceFunction(ray.rPos + LightDir * c).dist;
+    if(h < 0.0005){
+      r = 0.0;
+      break;
     }
-    r = min(r, h * 200.0 / c);
-    c += h;
+    r = min(r, 16.0 * h / c);//係数が小さいほど影の縁が柔らかい
+    c += clamp(h, 0.01, 0.5);
+    if(c > 8.0){break;}
   }
-  ray.fragColor *= mix(shadowCoef, 1.0, r);
-  return;
+  ray.fragColor *= mix(shadowCoef, 1.0, clamp(r,0.0,1.0));
+}
+
+void aoFunc(inout rayobj ray){//AO レイマーチの反復回数が多い場所=狭い溝ほど暗くする
+  float occ = 0.5 * smoothstep(0.0, 0.6, ray.iterate);
+  ray.fragColor *= (1.0 - occ);
+}
+
+void rimFunc(inout rayobj ray){//フレネルリムライト 視線に対して浅い角度の面を青く縁取る
+  float fr = pow(clamp(1.0 + dot(ray.direction, ray.normal), 0.0, 1.0), 3.0);
+  ray.fragColor += fr * vec3(0.301, 0.603, 1.000) * 0.6;
+  ray.fragColor = clamp(ray.fragColor,0.0,1.0);
 }
 
 void globallightFunc(inout rayobj ray){//大域照明
@@ -374,12 +411,10 @@ void growFunc(inout rayobj ray){//グロー
   ray.fragColor += grow;
 }
 
-const float minRadius = 60.0;
-const float maxRadius = 80.0;
-void fogFunc(inout rayobj ray){//霧
-  rayobj ray2 = ray;
-  ray2.material = SAIHATE;
-  vec3 fogColor = color(ray2);
+const float minRadius = 8.0;
+const float maxRadius = 45.0;
+void fogFunc(inout rayobj ray){//霧 遠くを深い青に沈めて奥行きを出す
+  vec3 fogColor = vec3(0.015, 0.043, 0.098);
   float fogcoef = clamp((ray.len-minRadius)/(maxRadius-minRadius),0.0,1.0);
   ray.fragColor = mix(ray.fragColor, fogColor, fogcoef);
 }
@@ -472,11 +507,17 @@ void main(void){
     if (effect.diffuse){
       diffuseFunc(ray);
     }
-    if (effect.incandescence){
-      incandescenceFunc(ray);
-    }
     if (effect.shadow){
       shadowFunc(ray);
+    }
+    if (effect.ao){
+      aoFunc(ray);
+    }
+    if (effect.incandescence){//影とAOのあとに足すことで、白熱光は遮蔽されず芯から発光して見える
+      incandescenceFunc(ray);
+    }
+    if (effect.rim){
+      rimFunc(ray);
     }
     if (effect.globallight){
       globallightFunc(ray);
