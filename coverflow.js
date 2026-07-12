@@ -8,7 +8,17 @@ const works = [
 ];
 
 const coverflow = document.getElementById("coverflow");
+
+//作品ページから戻ってきたとき、前回選択していたカードを復元する
 let current = 0;
+const saved = parseInt(sessionStorage.getItem("coverflowIndex"), 10);
+if (saved >= 0 && saved < works.length) current = saved;
+
+function setCurrent(i) {
+  current = i;
+  sessionStorage.setItem("coverflowIndex", String(i));
+  layout();
+}
 
 const cards = works.map((work, i) => {
   const card = document.createElement("div");
@@ -24,8 +34,7 @@ const cards = works.map((work, i) => {
     if (i === current) {
       navigate(work.href);
     } else {
-      current = i;
-      layout();
+      setCurrent(i);
     }
   });
 
@@ -62,8 +71,7 @@ function navigate(href) {
 function move(step) {
   const next = Math.min(works.length - 1, Math.max(0, current + step));
   if (next !== current) {
-    current = next;
-    layout();
+    setCurrent(next);
   }
 }
 
