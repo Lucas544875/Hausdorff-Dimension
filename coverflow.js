@@ -1,5 +1,6 @@
 const works = [
   { title: "炉心融解", href: "mandelbox.html", img: "imgs/meltdown.png" },
+  { title: "炉心冷却", href: "mandelbox3.html", img: "imgs/cooling.png" },
   { title: "習作 木綿豆腐", href: "mandelbox2.html", img: "imgs/tofu.png" },
   { title: "バベルの塔", href: "pseudoKleinian.html", img: "imgs/babbel.png" },
   { title: "種", href: "metaball.html", img: "imgs/metaball.png" },
