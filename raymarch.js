@@ -24,6 +24,17 @@ let keyQ = new LongPress(81);
 let keyE = new LongPress(69);
 let recorder;
 
+//全画面表示してもレイマーチングの画素数がこれまで(860x645)を超えないよう、
+//内部解像度は総画素数を固定してウィンドウのアスペクト比に合わせる
+const maxPixels = 860 * 645;
+function fitCanvas(){
+  const aspect = window.innerWidth / window.innerHeight;
+  cw = Math.round(Math.sqrt(maxPixels * aspect));
+  ch = Math.round(Math.sqrt(maxPixels / aspect));
+  c.width = cw;
+  c.height = ch;
+}
+
 // onload
 window.onload = function(){
   // エレメントを取得
@@ -31,9 +42,11 @@ window.onload = function(){
   eCheck = document.getElementById('check');
 
   // キャンバスサイズの設定
-  ch=645;cw=860;
-  c.height=ch;
-  c.width=cw;
+  fitCanvas();
+  window.addEventListener('resize', function(){
+    fitCanvas();
+    gl.viewport(0, 0, cw, ch);
+  });
 
   //視点の設定
   cDir=Quatarnion.vec(-1,0,0);
@@ -293,8 +306,9 @@ function mouseMove(e){
       mouseflag=false;
       return;
     };
-    let dx =(-0.7 * (e.offsetX-centorx) / cw);
-    let dy =(0.7 * (e.offsetY-centory) / ch);
+    //offsetXは表示サイズ基準の座標なので、内部解像度ではなく表示サイズで正規化する
+    let dx =(-0.7 * (e.offsetX-centorx) / c.clientWidth);
+    let dy =(0.7 * (e.offsetY-centory) / c.clientHeight);
     centorx=e.offsetX;
     centory=e.offsetY;
     cRotate(dx,dy);

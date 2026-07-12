@@ -1,31 +1,134 @@
-*{
-  text-align: center;
-  margin: 10px auto;
+body{
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
   background-color: #222222;
-  color :aliceblue;
-}
-canvas{
-  border: 1px solid black;
-}
-#recIcon{
-  color :red;
-}
-#downloadlink{
-  display:none;
+  color: aliceblue;
+  transition: opacity 0.35s;
+  animation: pageEnter 0.5s ease;
 }
 
-.link{
-  background-color: aliceblue;
+@keyframes pageEnter{
+  from{ opacity: 0; }
+}
+
+.pageLeave{
+  opacity: 0;
+}
+
+canvas{
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.overlay{
+  position: fixed;
+  inset: 0;
+  z-index: 1;
   display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	width: 300px;
-	height: 60px;
-	color: #333;
-	font-size: 18px;
-	font-weight: 700;
-	text-decoration: none;
-	cursor: pointer;
-	margin: 25pt auto;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  transition: opacity 0.5s, visibility 0s;
+}
+
+.overlay.hidden{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0s 0.5s;
+}
+
+.overlayTop{
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  padding: 16px 24px 40px;
+  background: linear-gradient(rgba(0, 0, 0, 0.55), transparent);
+}
+
+.backLink{
+  color: aliceblue;
+  font-family: 'Klee One', cursive;
+  font-size: 16px;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+.backLink:hover{
+  opacity: 1;
+}
+
+.workTitle{
+  margin-left: auto;
+  font-family: 'Klee One', cursive;
+  font-size: 22px;
+  text-shadow: 0 0 8px black, 0 0 8px black;
+}
+
+.overlayBottom{
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 24px 16px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.55));
+}
+
+.overlayBottom button{
+  background: rgba(255, 255, 255, 0.08);
+  color: aliceblue;
+  border: 1px solid rgba(240, 248, 255, 0.35);
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.overlayBottom button:hover{
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#helpToggle{
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.autoRun{
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#recIcon{
+  color: red;
+}
+
+#downloadlink{
+  display: none;
+  color: aliceblue;
+  font-size: 14px;
+}
+
+.helpPanel{
+  pointer-events: auto;
+  margin: 0 auto;
+  max-width: 480px;
+  padding: 20px 28px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(240, 248, 255, 0.2);
+  border-radius: 8px;
+  font-family: 'Klee One', cursive;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.helpPanel p{
+  margin: 6px 0;
 }

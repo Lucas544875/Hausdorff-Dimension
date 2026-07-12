@@ -22,7 +22,7 @@ const cards = works.map((work, i) => {
 
   card.addEventListener("click", () => {
     if (i === current) {
-      location.href = work.href;
+      navigate(work.href);
     } else {
       current = i;
       layout();
@@ -52,6 +52,13 @@ function layout() {
   });
 }
 
+function navigate(href) {
+  document.body.classList.add("pageLeave");
+  setTimeout(() => {
+    location.href = href;
+  }, 350);
+}
+
 function move(step) {
   const next = Math.min(works.length - 1, Math.max(0, current + step));
   if (next !== current) {
@@ -63,7 +70,7 @@ function move(step) {
 document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") move(-1);
   if (e.key === "ArrowRight") move(1);
-  if (e.key === "Enter") location.href = works[current].href;
+  if (e.key === "Enter") navigate(works[current].href);
 });
 
 let wheelLock = 0;

@@ -5,6 +5,16 @@ body{
   flex-direction: column;
   background-color: #222222;
   overflow: hidden;
+  transition: opacity 0.35s;
+  animation: pageEnter 0.5s ease;
+}
+
+@keyframes pageEnter{
+  from{ opacity: 0; }
+}
+
+.pageLeave{
+  opacity: 0;
 }
 
 h1{
